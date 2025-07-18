@@ -42,7 +42,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-screen h-screen">
+    <div className="">
       <h1 className="text-4xl font-bold mt-10 ml-10">NeuroGraph</h1>
       <div className="w-full flex justify-center mt-10">
         <input
@@ -52,7 +52,7 @@ export default function Home() {
           placeholder="Search"
         />
       </div>
-      <section className="h-full w-full flex justify-center">
+      <section className="h-fit w-full flex justify-center">
         <Graph data={searchedNodes} />
       </section>
     </div>
