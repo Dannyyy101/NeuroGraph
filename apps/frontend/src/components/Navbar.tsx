@@ -16,7 +16,7 @@ export default function Navbar() {
 
   return (
     <>
-      <button className="absolute top-4 right-4" onClick={() => setOpen(true)}>
+      <button className="absolute top-6 right-6" onClick={() => setOpen(true)}>
         <span className="material-symbols-outlined icon-size-40">menu</span>
       </button>
       {visible && (
@@ -26,7 +26,7 @@ export default function Navbar() {
           }`}
         >
           <button
-            className="absolute top-4 left-4"
+            className="absolute top-6 left-6"
             onClick={() => setOpen(false)}
           >
             <span className="material-symbols-outlined icon-size-40">menu</span>

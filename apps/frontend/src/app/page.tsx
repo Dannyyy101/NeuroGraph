@@ -5,14 +5,14 @@ import { useState } from "react";
 export default function Home() {
   const data = {
     nodes: [
-      { id: "node1", name: "Node 1" },
-      { id: "node2", name: "Node 2" },
-      { id: "node3", name: "Node 3" },
+      { id: 1, name: "Node 1" },
+      { id: 2, name: "Node 2" },
+      { id: 3, name: "Node 3" },
     ],
     links: [
-      { source: "node1", target: "node2" },
-      { source: "node2", target: "node3" },
-      { source: "node3", target: "node1" },
+      { source: 1, target: 2 },
+      { source: 2, target: 3 },
+      { source: 3, target: 1 },
     ],
   };
   const [searchedNodes, setSearchedNodes] = useState(data);
