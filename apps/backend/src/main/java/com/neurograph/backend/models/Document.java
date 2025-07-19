@@ -4,9 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 
 
 import java.util.Set;
+
+import static org.hibernate.type.SqlTypes.LONGVARCHAR;
 
 @NoArgsConstructor
 @Setter
@@ -21,6 +25,8 @@ public class Document {
     private Long documentId;
 
     private String name;
+    @Column(columnDefinition = "TEXT")
+    private String content;
     @ManyToMany
     @JoinTable(
             name = "DOCUMENT_LINKS",

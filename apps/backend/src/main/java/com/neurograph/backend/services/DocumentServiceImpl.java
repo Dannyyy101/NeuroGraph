@@ -30,12 +30,25 @@ public class DocumentServiceImpl implements DocumentService{
 
     @Override
     public void createDocument(DocumentDTO document) {
-        Document documentEntity = documentMapper.toEntity(document);
-        if(document.getLinkedDocumentIds() != null) {
-            Set<Document> resolvedDocuments = getDocumentsByIds(document.linkedDocumentIds);
-            documentEntity.setLinkedDocuments(resolvedDocuments);
-        }
+        Document documentEntity = documentMapper.toEntity(document, this);
         documentRepository.save(documentEntity);
+    }
+
+    @Override
+    public void patchDocument(Long documentId, DocumentDTO document) {
+        Document dbDocument = documentRepository.findById(documentId).orElseThrow(
+                () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
+        );
+
+        if(document.getName() != null) {
+            dbDocument.setName(document.getName());
+        }
+
+        if(document.getContent() != null) {
+            dbDocument.setContent(document.getContent());
+        }
+
+        documentRepository.save(dbDocument);
     }
 
     @Override
@@ -45,5 +58,17 @@ public class DocumentServiceImpl implements DocumentService{
             throw new IllegalArgumentException("Some documents not found");
         }
         return documentSet;
+    }
+
+    @Override
+    public Set<Long> getLinkedDocumentsFromDocument(Document document) {
+        return Set.of();
+    }
+
+    @Override
+    public DocumentDTO getDocumentById(Long documentId) {
+        return documentMapper.toDTO( documentRepository.findById(documentId).orElseThrow(
+                () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
+        ));
     }
 }

@@ -7,14 +7,11 @@ import com.neurograph.backend.repositorys.DocumentRepository;
 import com.neurograph.backend.services.DocumentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-
+@RequestMapping("/documents")
 @RestController
 public class DocumentController {
 
@@ -25,14 +22,25 @@ public class DocumentController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Set<DocumentHeadDTO>> index() {
+    public ResponseEntity<Set<DocumentHeadDTO>> getAllDocuments() {
         return new ResponseEntity<>(documentService.getAllDocumentHeads(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<DocumentDTO> createDocument(@RequestBody DocumentDTO document){
         documentService.createDocument(document);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{documentId}")
+    public ResponseEntity<DocumentDTO> getDocumentById(@PathVariable Long documentId) {
+        return new ResponseEntity<>(documentService.getDocumentById(documentId), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{documentId}")
+    public ResponseEntity<DocumentDTO> patchDocument(@PathVariable Long documentId, @RequestBody DocumentDTO document) {
+        documentService.patchDocument(documentId, document);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
