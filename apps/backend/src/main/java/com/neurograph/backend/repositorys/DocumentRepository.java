@@ -1,8 +1,12 @@
 package com.neurograph.backend.repositorys;
 
 import com.neurograph.backend.models.Document;
-import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
-public interface DocumentRepository extends Neo4jRepository<Document, Long> {
+import java.util.Set;
 
+public interface DocumentRepository extends CrudRepository<Document, Long> {
+    @Query("SELECT d FROM Document d WHERE d.documentId IN :documentIds")
+    Set<Document> findAllByDocumentIds(Set<Long> documentIds);
 }

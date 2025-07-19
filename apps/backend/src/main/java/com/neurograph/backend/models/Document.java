@@ -1,31 +1,30 @@
 package com.neurograph.backend.models;
 
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+
 
 import java.util.Set;
 
+@NoArgsConstructor
 @Setter
 @Getter
-@Node
+@Entity
+@Table(name = "DOCUMENTS")
 public class Document {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @Column(name = "document_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long documentId;
 
     private String name;
-
-    public Document(String name){
-        this.name = name;
-    }
-
-    @Relationship(type = "LINKED")
-    public Set<Document> teammates;
-
-
+    @ManyToMany
+    @JoinTable(
+            name = "DOCUMENT_LINKS",
+            joinColumns = @JoinColumn(name = "document_id"),
+            inverseJoinColumns = @JoinColumn(name = "linked_document_id"))
+    Set<Document> linkedDocuments;
 }
