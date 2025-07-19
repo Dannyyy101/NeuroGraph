@@ -43,8 +43,10 @@ export default function Home() {
 
   return (
     <div className="">
-      <h1 className="text-4xl font-bold mt-10 ml-10">NeuroGraph</h1>
-      <div className="w-full flex justify-center mt-10">
+      <h1 className="text-4xl font-bold ml-10 absolute left-8 top-10">
+        NeuroGraph
+      </h1>
+      <div className="w-full flex justify-center mt-40">
         <input
           className="w-96 h-10 rounded-md pl-1 border border-black"
           value={userInput}
