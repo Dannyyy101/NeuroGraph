@@ -1,14 +1,27 @@
 services:
-  neo4j:
-    image: neo4j:latest
-    volumes:
-      - ./neo4j/logs:/logs
-      - ./neo4j/config:/config
-      - ./neo4j/data:/data
-      - ./neo4j/plugins:/plugins
+  db:
+    container_name: postgres
+    image: postgres
     environment:
-      - NEO4J_AUTH=neo4j/password
+      POSTGRES_USER: daniel
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+      POSTGRES_DB: development
+    volumes:
+      - db:/data/postgres
     ports:
-      - "7474:7474"
-      - "7687:7687"
-    restart: always
+      - "5332:5432"
+    networks:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
