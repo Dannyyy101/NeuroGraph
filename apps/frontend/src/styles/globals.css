@@ -92,6 +92,10 @@ span.icon-size-48 {
   }
 }
 
+button:hover{
+  cursor: pointer;
+}
+
 @theme {
   --color-text-50: #f0f1f4;
   --color-text-100: #e1e3ea;

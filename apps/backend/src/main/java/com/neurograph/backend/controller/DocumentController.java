@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@RequestMapping("/documents")
+@RequestMapping("/api/documents")
 @RestController
 public class DocumentController {
 
@@ -25,9 +25,9 @@ public class DocumentController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<DocumentDTO> createDocument(@RequestBody DocumentDTO document){
-        documentService.createDocument(document);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Long> createDocument(@RequestBody DocumentDTO document){
+        Long documentId = documentService.createDocument(document);
+        return new ResponseEntity<>(documentId, HttpStatus.CREATED);
     }
 
     @GetMapping("/{documentId}")
@@ -35,9 +35,9 @@ public class DocumentController {
         return new ResponseEntity<>(documentService.getDocumentById(documentId), HttpStatus.OK);
     }
 
-    @PatchMapping("/{documentId}")
+    @PutMapping("/{documentId}")
     public ResponseEntity<DocumentDTO> patchDocument(@PathVariable Long documentId, @RequestBody DocumentDTO document) {
-        documentService.patchDocument(documentId, document);
+        documentService.updateDocument(documentId, document);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
