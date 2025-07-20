@@ -5,14 +5,14 @@ import { useState } from "react";
 export default function Home() {
   const data = {
     nodes: [
-      { id: "node1", name: "Node 1" },
-      { id: "node2", name: "Node 2" },
-      { id: "node3", name: "Node 3" },
+      { id: 1, name: "Node 1" },
+      { id: 2, name: "Node 2" },
+      { id: 3, name: "Node 3" },
     ],
     links: [
-      { source: "node1", target: "node2" },
-      { source: "node2", target: "node3" },
-      { source: "node3", target: "node1" },
+      { source: 1, target: 2 },
+      { source: 2, target: 3 },
+      { source: 3, target: 1 },
     ],
   };
   const [searchedNodes, setSearchedNodes] = useState(data);
@@ -42,9 +42,11 @@ export default function Home() {
   };
 
   return (
-    <div className="w-screen h-screen">
-      <h1 className="text-4xl font-bold mt-10 ml-10">NeuroGraph</h1>
-      <div className="w-full flex justify-center mt-10">
+    <div className="">
+      <h1 className="text-4xl font-bold ml-10 absolute left-8 top-10">
+        NeuroGraph
+      </h1>
+      <div className="w-full flex justify-center mt-40">
         <input
           className="w-96 h-10 rounded-md pl-1 border border-black"
           value={userInput}
@@ -52,7 +54,7 @@ export default function Home() {
           placeholder="Search"
         />
       </div>
-      <section className="h-full w-full flex justify-center">
+      <section className="h-fit w-full flex justify-center">
         <Graph data={searchedNodes} />
       </section>
     </div>
