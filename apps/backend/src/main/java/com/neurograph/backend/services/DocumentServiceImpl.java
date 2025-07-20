@@ -71,4 +71,12 @@ public class DocumentServiceImpl implements DocumentService{
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         ));
     }
+
+    @Override
+    public void deleteDocumentById(Long documentId) {
+        Document document = documentRepository.findById(documentId).orElseThrow(
+                () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
+        );
+        documentRepository.delete(document);
+    }
 }

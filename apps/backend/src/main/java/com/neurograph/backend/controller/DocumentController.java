@@ -2,8 +2,6 @@ package com.neurograph.backend.controller;
 
 import com.neurograph.backend.dtos.DocumentDTO;
 import com.neurograph.backend.dtos.DocumentHeadDTO;
-import com.neurograph.backend.models.Document;
-import com.neurograph.backend.repositorys.DocumentRepository;
 import com.neurograph.backend.services.DocumentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,4 +41,9 @@ public class DocumentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{documentId}")
+    public ResponseEntity<DocumentDTO> deleteDocument(@PathVariable Long documentId) {
+        documentService.deleteDocumentById(documentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

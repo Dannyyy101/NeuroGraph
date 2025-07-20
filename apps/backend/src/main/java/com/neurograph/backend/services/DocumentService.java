@@ -13,4 +13,6 @@ public interface DocumentService {
     Set<Document> getDocumentsByIds(Set<Long> documentIds);
     Set<Long> getLinkedDocumentsFromDocument(Document document);
     DocumentDTO getDocumentById(Long documentId);
+
+    void deleteDocumentById(Long documentId);
 }
