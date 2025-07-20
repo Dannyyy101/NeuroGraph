@@ -29,26 +29,18 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public void createDocument(DocumentDTO document) {
+    public Long createDocument(DocumentDTO document) {
         Document documentEntity = documentMapper.toEntity(document, this);
-        documentRepository.save(documentEntity);
+        return documentRepository.save(documentEntity).getDocumentId();
     }
 
     @Override
-    public void patchDocument(Long documentId, DocumentDTO document) {
-        Document dbDocument = documentRepository.findById(documentId).orElseThrow(
+    public void updateDocument(Long documentId, DocumentDTO document) {
+        documentRepository.findById(documentId).orElseThrow(
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         );
-
-        if(document.getName() != null) {
-            dbDocument.setName(document.getName());
-        }
-
-        if(document.getContent() != null) {
-            dbDocument.setContent(document.getContent());
-        }
-
-        documentRepository.save(dbDocument);
+        Document updatedDocument = documentMapper.toEntity(document, this);
+        documentRepository.save(updatedDocument);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.Set;
 @Setter
 @Getter
 public class DocumentHeadDTO {
-    private String documentId;
+    private Long documentId;
     private String name;
     private Set<Long> linkedDocumentIds;
 }
