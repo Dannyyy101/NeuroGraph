@@ -3,6 +3,7 @@ import Link from "next/link";
 import {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 import {DocumentBody} from "@/utils/types/documentBody.type";
+import {Texteditor} from "@/components/Texteditor";
 
 export default function Document() {
   const [document, setDocument] = useState<DocumentBody | null>(null);
@@ -22,6 +23,7 @@ export default function Document() {
     }, [documentId]);
 
     useEffect(() => {
+        console.log("dad")
         const interval = setInterval(() => {
             if (JSON.stringify(document) !== JSON.stringify(updatedDocument)) {
                 fetch(`http://localhost:8080/api/documents/${documentId}`, {
@@ -29,14 +31,35 @@ export default function Document() {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(updatedDocument)
+                    body: JSON.stringify(updatedDocument),
+                    keepalive:true
                 });
                 setDocument(updatedDocument);
             }
-        }, 5000);
+        }, 5000)
 
-        return () => clearInterval(interval);
-    }, [document, updatedDocument, documentId]);
+        return () => clearInterval(interval)
+    }, [document, documentId, updatedDocument]);
+
+    useEffect(() => {
+        const handleUnload = () => {
+            if (JSON.stringify(document) !== JSON.stringify(updatedDocument)) {
+                fetch(`http://localhost:8080/api/documents/${documentId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(updatedDocument),
+                    keepalive:true
+                });
+                setDocument(updatedDocument);
+            }
+        };
+
+        window.addEventListener('unload', handleUnload);
+        return () => window.removeEventListener('unload', handleUnload);
+    }, [document, documentId, updatedDocument]);
+
 
     if(!document || !updatedDocument) return <div>Loading...</div>;
 
@@ -51,17 +74,15 @@ export default function Document() {
       <section className="w-2/3 h-2/3">
         <input
             value={updatedDocument.name}
-            onChange={(e) => setUpdatedDocument({...document, name: e.target.value})}
+            onChange={(e) => setUpdatedDocument({...updatedDocument, name: e.target.value})}
           className="w-full h-10 pl-1 text-2xl focus:outline-none"
           placeholder="Titel"
         />
-        <div className="h-[1px] w-full bg-gray-300"></div>
-        <textarea
-          placeholder="Content"
-          value={updatedDocument.content}
-          onChange={(e) => setUpdatedDocument({...document, content: e.target.value})}
-          className="mt-2 w-full h-full pl-1 rounded-md resize-none focus:outline-none"
-        ></textarea>
+          <div className="h-[1px] w-full bg-gray-300"></div>
+
+        <Texteditor className={"mt-2"} value={updatedDocument.content} onChange={(content:string) => setUpdatedDocument({...updatedDocument, content:content})}
+
+        ></Texteditor>
       </section>
     </main>
   );
