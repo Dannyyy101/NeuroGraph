@@ -15,10 +15,10 @@ pipeline {
         stage('Inject Secrets') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'postgres-user', variable: 'POSTGRES_USER'),
-                    string(credentialsId: 'postgres-password', variable: 'POSTGRES_PASSWORD'),
-                    string(credentialsId: 'spring-username', variable: 'SPRING_DATASOURCE_USERNAME'),
-                    string(credentialsId: 'spring-password', variable: 'SPRING_DATASOURCE_PASSWORD')
+                    string(credentialsId: 'POSTGRES_USER', variable: 'POSTGRES_USER'),
+                    string(credentialsId: 'POSTGRES_PASSWORD', variable: 'POSTGRES_PASSWORD'),
+                    string(credentialsId: 'SPRING_DATASOURCE_USERNAME', variable: 'SPRING_DATASOURCE_USERNAME'),
+                    string(credentialsId: 'SPRING_DATASOURCE_PASSWORD', variable: 'SPRING_DATASOURCE_PASSWORD')
                 ]) {
                     script {
                         // Write .env file for docker-compose
