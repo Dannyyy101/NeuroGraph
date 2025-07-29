@@ -34,19 +34,13 @@ SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker-compose -f docker-compose.yml --env-file .env build'
+                sh 'docker compose -f docker-compose.yml --env-file .env build'
             }
         }
 
         stage('Run Containers') {
             steps {
-                sh 'docker-compose -f docker-compose.yml --env-file .env up -d'
-            }
-        }
-
-        stage('Teardown') {
-            steps {
-                sh 'docker-compose -f docker-compose.yml --env-file .env down'
+                sh 'docker compose -f docker-compose.yml --env-file .env up -d'
             }
         }
     }

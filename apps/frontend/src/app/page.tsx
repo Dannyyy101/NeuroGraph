@@ -1,17 +1,16 @@
 "use client";
 import Graph from "@/components/Graph";
 import {useEffect, useState} from "react";
-import {DocumentHead} from "@/utils/types/DocumentHead.type";
 import {GraphData} from "@/utils/types/GraphData.type";
 import {useRouter} from "next/navigation";
+import {getAllDocuments} from "@/services/documentService";
 
 export default function Home() {
     const router = useRouter()
 
     useEffect(() => {
         const fetchDocuments = async () => {
-            const response = await fetch("http://localhost:8080/api/documents/")
-            const result = await response.json() as DocumentHead[]
+            const result = await getAllDocuments()
             const nodes = result.map((item) => ({id: item.documentId, name: item.name}))
             const links = result.map((item => item.linkedDocumentIds.map((linkedId) => ({
                 source: item.documentId,
@@ -54,11 +53,11 @@ export default function Home() {
             })
             .filter((item) => item !== null);
 
-        setSearchedNodes({nodes: nodesByName, links: links});
+        setSearchedNodes({nodes: nodesByName, links: links} as GraphData);
     };
 
     const handleAddDocument = async () => {
-        const response = await fetch("http://localhost:8080/api/documents/", {
+        const response = await fetch("http://backend:8080/api/documents/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
