@@ -36,7 +36,7 @@ stage('Inject Secrets') {
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker compose -f docker-compose.yml --env-file .env --build'
+                sh 'docker compose -f docker-compose.yml --env-file .env build'
             }
         }
 
