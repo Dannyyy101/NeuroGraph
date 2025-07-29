@@ -1,26 +1,4 @@
 services:
-  nginx-proxy-manager:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      # These ports are in format <host-port>:<container-port>
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
-      # Add any other Stream port you want to expose
-      # - '21:21' # FTP
-
-      #environment:
-      # Uncomment this if you want to change the location of
-      # the SQLite DB file within the container
-      # DB_SQLITE_FILE: "/data/database.sqlite"
-
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
-
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
   db:
     container_name: postgres
     image: postgres:latest
@@ -32,7 +10,7 @@ services:
     volumes:
       - db:/data/postgres
     ports:
-      - "5432:5432"
+      - `${POSTGRES_PORT}:5432`
     networks:
       - app-network
     restart: unless-stopped
@@ -55,7 +33,7 @@ services:
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       SPRING_APPLICATION_NAME: backend
     ports:
-      - "8080:8080"
+      - `${SPRING_PORT}:8080`
     depends_on:
       - db
       - nginx-proxy-manager
@@ -68,7 +46,7 @@ services:
       context: ./apps/frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - `${NEXTJS_PORT}:3000`
     networks:
       - app-network
     depends_on:
