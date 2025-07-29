@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Installieren der Abhängigkeiten
-RUN npm ci --omit=dev
+RUN npm install
 
 # Kopieren des gesamten Projekts ins Image
 COPY . .
