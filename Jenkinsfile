@@ -19,6 +19,8 @@ stage('Inject Secrets') {
 
                 echo "Current branch: $BRANCH_NAME"
 
+                echo "$BRANCH_NAME" >> .env
+
                 if [ "$BRANCH_NAME" = "develop" ]; then
                     echo "SPRING_PORT=8080" >> .env
                     echo "NEXTJS_PORT=3000" >> .env
