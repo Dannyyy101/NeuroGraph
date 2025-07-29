@@ -1,2 +1,3 @@
 .vscode
-neo4j
+
+.env
