@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        COMPOSE_PROJECT_NAME = 'NeuroGraph'
+        COMPOSE_PROJECT_NAME = 'neurograph'
     }
 
     stages {
