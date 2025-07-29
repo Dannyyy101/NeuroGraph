@@ -11,26 +11,13 @@ pipeline {
                 checkout scm
             }
         }
-
-        stage('Inject Secrets') {
-            steps {
-                withCredentials([
-                    string(credentialsId: 'POSTGRES_USER', variable: 'POSTGRES_USER'),
-                    string(credentialsId: 'POSTGRES_PASSWORD', variable: 'POSTGRES_PASSWORD'),
-                    string(credentialsId: 'SPRING_DATASOURCE_USERNAME', variable: 'SPRING_DATASOURCE_USERNAME'),
-                    string(credentialsId: 'SPRING_DATASOURCE_PASSWORD', variable: 'SPRING_DATASOURCE_PASSWORD')
-                ]) {
-                    script {
-                        writeFile file: '.env', text: """
-POSTGRES_USER=${POSTGRES_USER}
-POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-"""
-                    }
-                }
-            }
+stage('Inject Secrets') {
+    steps {
+        withCredentials([string(credentialsId: '520b2dc7-dd30-469a-9b0e-4db480307e6b', variable: 'ENV_CONTENT')]) {
+            writeFile file: '.env', text: "${ENV_CONTENT}"
         }
+    }
+}
 
         stage('Build Docker Images') {
             steps {
