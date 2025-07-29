@@ -10,7 +10,7 @@ services:
     volumes:
       - db:/data/postgres
     ports:
-      - `${POSTGRES_PORT}:5432`
+      - "${POSTGRES_PORT}:5432"
     networks:
       - app-network
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       SPRING_APPLICATION_NAME: backend
     ports:
-      - `${SPRING_PORT}:8080`
+      - "${SPRING_PORT}:8080"
     depends_on:
       - db
       - nginx-proxy-manager
@@ -46,7 +46,7 @@ services:
       context: ./apps/frontend
       dockerfile: Dockerfile
     ports:
-      - `${NEXTJS_PORT}:3000`
+      - "${NEXTJS_PORT}:3000"
     networks:
       - app-network
     depends_on:
