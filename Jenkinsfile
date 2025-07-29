@@ -28,6 +28,8 @@ stage('Inject Secrets') {
                     echo "NEXTJS_PORT=3001" >> .env
                     echo "POSTGRES_PORT=5431" >> .env
                 fi
+
+                sh 'cat .env'
             '''
         }
     }

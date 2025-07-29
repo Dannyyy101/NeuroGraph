@@ -36,7 +36,6 @@ services:
       - "${SPRING_PORT}:8080"
     depends_on:
       - db
-      - nginx-proxy-manager
 
     networks:
       - app-network
@@ -51,7 +50,6 @@ services:
       - app-network
     depends_on:
       - backend
-      - nginx-proxy-manager
 
 networks:
   app-network:
