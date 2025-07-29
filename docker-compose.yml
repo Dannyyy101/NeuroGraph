@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: postgres
+    container_name: "${BRANCH_NAME}postgres"
     image: postgres:latest
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -21,7 +21,7 @@ services:
       retries: 5
 
   backend:
-    container_name: backend
+    container_name: "${BRANCH_NAME}backend"
     build:
       context: ./apps/backend
       dockerfile: Dockerfile
@@ -40,7 +40,7 @@ services:
     networks:
       - app-network
   frontend:
-    container_name: frontend
+    container_name: "${BRANCH_NAME}frontend"
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
