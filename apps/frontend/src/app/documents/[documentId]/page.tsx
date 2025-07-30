@@ -32,16 +32,9 @@ export default function Document() {
     }, [document, documentId, updatedDocument]);
 
     useEffect(() => {
-        const handleUnload = () => {
-            if (JSON.stringify(document) !== JSON.stringify(updatedDocument)) {
-                fetch(`http://localhost:8080/api/documents/${documentId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(updatedDocument),
-                    keepalive: true
-                });
+        const handleUnload = async () => {
+            if (updatedDocument && JSON.stringify(document) !== JSON.stringify(updatedDocument)) {
+                await updateDocumentById(documentId, updatedDocument)
                 setDocument(updatedDocument);
             }
         };
