@@ -1,1 +1,1 @@
-export const BACKEND_URL = `http://${process.env.NEXT_PUBLIC_BACKEND_URL}/api`
+export const BACKEND_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`
