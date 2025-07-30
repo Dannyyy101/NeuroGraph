@@ -3,7 +3,7 @@ import Graph from "@/components/Graph";
 import {useEffect, useState} from "react";
 import {GraphData} from "@/utils/types/GraphData.type";
 import {useRouter} from "next/navigation";
-import {getAllDocuments} from "@/services/documentService";
+import {createNewDocument, getAllDocuments} from "@/services/documentService";
 
 export default function Home() {
     const router = useRouter()
@@ -57,15 +57,8 @@ export default function Home() {
     };
 
     const handleAddDocument = async () => {
-        const response = await fetch("http://backend:8080/api/documents/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({name: userInput, content: ""})
-        });
-        const data = await response.json()
-        router.push(`/documents/${data}`)
+        const id = await createNewDocument(userInput)
+        router.push(`/documents/${id}`)
     }
 
     return (
