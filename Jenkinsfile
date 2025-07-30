@@ -28,14 +28,14 @@ pipeline {
 
                     // 2) Port‑Konfiguration
                     def ports = (env.BRANCH_NAME == 'develop') ? '''
-SPRING_PORT=8080
-NEXTJS_PORT=3000
-POSTGRES_PORT=5432
-''' : '''
-SPRING_PORT=8081
-NEXTJS_PORT=3001
-POSTGRES_PORT=5431
-'''
+                        SPRING_PORT=8080
+                        NEXTJS_PORT=3000
+                        POSTGRES_PORT=5432
+                        ''' : '''
+                        SPRING_PORT=8081
+                        NEXTJS_PORT=3001
+                        POSTGRES_PORT=5431
+                        '''
                     writeFile file: '.env.ports', text: ports
                     sh '''
                         # Merge secrets‑.env mit Ports
