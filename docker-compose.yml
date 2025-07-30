@@ -45,8 +45,7 @@ services:
       context: ./apps/frontend
       dockerfile: Dockerfile
     environment:
-      NEXT_PUBLIC_BACKEND_CONTAINER_NAME: ${NEXT_PUBLIC_BACKEND_CONTAINER_NAME}
-      NEXT_PUBLIC_SPRING_PORT: ${NEXT_PUBLIC_SPRING_PORT}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
     ports:
       - "${NEXTJS_PORT}:3000"
     networks:

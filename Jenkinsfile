@@ -31,10 +31,12 @@ pipeline {
                         SPRING_PORT=8080
                         NEXTJS_PORT=3000
                         POSTGRES_PORT=5432
+                        NEXT_PUBLIC_BACKEND_URL=http://developbackend:8080
                         ''' : '''
                         SPRING_PORT=8081
                         NEXTJS_PORT=3001
                         POSTGRES_PORT=5431
+                        NEXT_PUBLIC_BACKEND_URL=http://mainbackend:8081
                         '''
                     writeFile file: '.env.ports', text: ports
                     sh '''
