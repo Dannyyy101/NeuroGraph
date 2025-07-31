@@ -15,6 +15,7 @@ export default function Graph({ data }: { data: GraphData | null }) {
       graphData={data}
       height={400}
       width={800}
+      nodeColor={(_) => "rgb(235, 110, 60)"}
       onNodeClick={(node) => {
         const id = node.id;
         if (!id) throw new Error("Node has to have a id");

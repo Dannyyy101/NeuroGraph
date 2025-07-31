@@ -24,8 +24,14 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public Set<DocumentHeadDTO> getAllDocumentHeads() {
-        ArrayList<Document> documents = (ArrayList<Document>) documentRepository.findAll();
+    public Set<DocumentHeadDTO> getAllDocumentHeads(String name) {
+        ArrayList<Document> documents = null;
+        if (name != null) {
+            documents = documentRepository.findAllByNameContainingIgnoreCase(name);
+        } else {
+            documents = (ArrayList<Document>) documentRepository.findAll();
+        }
+
         return documents.stream()
                 .map(documentMapper::toHeadDTO)
                 .collect(java.util.stream.Collectors.toSet());
@@ -60,7 +66,7 @@ public class DocumentServiceImpl implements DocumentService{
     @Override
     public Set<Document> getDocumentsByIds(Set<Long> documentIds) {
         Set<Document> documentSet = documentRepository.findAllByDocumentIds(documentIds);
-        if(documentSet.size() != documentIds.size()) {
+        if (documentSet.size() != documentIds.size()) {
             throw new IllegalArgumentException("Some documents not found");
         }
         return documentSet;
@@ -73,7 +79,7 @@ public class DocumentServiceImpl implements DocumentService{
 
     @Override
     public DocumentDTO getDocumentById(Long documentId) {
-        return documentMapper.toDTO( documentRepository.findById(documentId).orElseThrow(
+        return documentMapper.toDTO(documentRepository.findById(documentId).orElseThrow(
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         ));
     }

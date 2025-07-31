@@ -20,8 +20,8 @@ public class DocumentController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Set<DocumentHeadDTO>> getAllDocuments() {
-        return new ResponseEntity<>(documentService.getAllDocumentHeads(), HttpStatus.OK);
+    public ResponseEntity<Set<DocumentHeadDTO>> getAllDocuments(@RequestParam(required = false) String name) {
+        return new ResponseEntity<>(documentService.getAllDocumentHeads(name), HttpStatus.OK);
     }
 
     @PostMapping("/")

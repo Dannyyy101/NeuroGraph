@@ -7,7 +7,7 @@ import com.neurograph.backend.models.Document;
 import java.util.Set;
 
 public interface DocumentService {
-    Set<DocumentHeadDTO> getAllDocumentHeads();
+    Set<DocumentHeadDTO> getAllDocumentHeads(String name);
     Long createDocument(DocumentDTO document);
     void updateDocument(Long documentId, DocumentDTO document);
     Set<Document> getDocumentsByIds(Set<Long> documentIds);

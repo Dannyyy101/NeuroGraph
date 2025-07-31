@@ -61,8 +61,7 @@ export default function Document() {
                     className="w-full h-10 pl-1 text-2xl focus:outline-none"
                     placeholder="Titel"
                 />
-                <div className="h-[1px] w-full bg-gray-300"></div>
-
+                <div className="h-[1px] w-full bg-border"></div>
                 <Texteditor className={"mt-2"} value={updatedDocument.content}
                             onChange={(content: string) => setUpdatedDocument({...updatedDocument, content: content})}
                 ></Texteditor>

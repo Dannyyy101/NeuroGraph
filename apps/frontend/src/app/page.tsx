@@ -63,7 +63,7 @@ export default function Home() {
 
     return (
         <div className="">
-            <h1 className="text-4xl font-bold ml-10 absolute left-8 top-10">
+            <h1 className="text-4xl font-bold ml-10 absolute left-16 top-10">
                 NeuroGraph
             </h1>
             <div className="w-full flex flex-col items-center mt-40">

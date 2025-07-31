@@ -3,8 +3,12 @@ import {DocumentHead} from "@/utils/types/DocumentHead.type";
 import {BACKEND_URL} from "@/utils/constants";
 import {DocumentBody} from "@/utils/types/documentBody.type";
 
-export const getAllDocuments = async () => {
-    const response = await fetch(`${BACKEND_URL}/documents/`)
+export const getAllDocuments = async (filter?:{name?:string}) => {
+    const url = new URL(`${BACKEND_URL}/documents/`);
+    if(filter && filter.name){
+        url.searchParams.set("name", filter.name)
+    }
+    const response = await fetch(url.toString())
     return await response.json() as DocumentHead[]
 }
 

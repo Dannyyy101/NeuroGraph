@@ -124,7 +124,15 @@ interface NodeProps {
     onChange: (text: string, id: number) => void
 }
 
+import getCaretCoordinates from "textarea-caret"
+import {DocumentHead} from "@/utils/types/DocumentHead.type";
+import {getAllDocuments} from "@/services/documentService";
+
 const Node: React.FC<NodeProps> = ({position, activeElementId, handleChangeActiveElement, value, onChange}) => {
+    const [labelPosition, setLabelPosition] = useState<{ x: number, y: number } | null>(null)
+    const [filteredNodes, setFilteredNodes] = useState<DocumentHead[]>([])
+    // TODO TAKE THE CACHED DOCUMENTS VIA IMMER AND THE OTHER STATE MANAGEMENT TOOL
+
     const handleOnClick = () => {
         handleChangeActiveElement(position)
         setTimeout(() => {
@@ -132,13 +140,41 @@ const Node: React.FC<NodeProps> = ({position, activeElementId, handleChangeActiv
         }, 0);
     }
 
-    const handleOnChange = (text: string) => {
+
+    const handleOnChange = async (text: string) => {
         onChange(text, position)
+        const input = document.getElementById(String(position)) as HTMLInputElement
+        if (input && input.selectionEnd) {
+            const match = text.match(/\[\[(.*?)$/);
+            if (match) {
+                const cords = input.getBoundingClientRect();
+                const caret = getCaretCoordinates(input, input.selectionEnd);
+                const documents = await getAllDocuments({name: match[1]})
+                setFilteredNodes(documents)
+                setLabelPosition({x: caret.left + cords.x - 15, y: caret.top + cords.y + 20})
+            } else {
+                setLabelPosition(null)
+            }
+        }
+    }
+
+    const handleAddLink = (id:number, name:string) => {
+        const link = value.replace(/\[\[(.*?)$/, `[[${id}|${name}]]`)
+        onChange(link, position)
+        setLabelPosition(null)
+        setTimeout(() => {
+            document.getElementById(String(position))?.focus()
+        }, 0);
     }
 
     return <>
+        {labelPosition &&
+            <div className={`absolute flex flex-col items-start`}
+                 style={{top: `${labelPosition.y}px`, left: `${labelPosition.x}px`}}>{filteredNodes.map((node) =>
+                <button key={node.documentId} onClick={() => handleAddLink(node.documentId, node.name)}>{node.name}</button>)}</div>
+        }
         {position === activeElementId ?
-            <input value={value} onChange={(e) => handleOnChange(e.target.value)}
+            <input type={"text"} value={value} onChange={(e) => handleOnChange(e.target.value)}
                    id={String(position)} className={"ml-1 w-full min-h-6 focus:outline-none"}/> :
             <div onClick={handleOnClick} className={"ml-1 w-full min-h-6"}
                  dangerouslySetInnerHTML={{__html: converter(value)}}></div>
