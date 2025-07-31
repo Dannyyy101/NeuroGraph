@@ -8,7 +8,10 @@ import com.neurograph.backend.utils.mapper.DocumentMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class DocumentServiceImpl implements DocumentService{
@@ -31,6 +34,9 @@ public class DocumentServiceImpl implements DocumentService{
     @Override
     public Long createDocument(DocumentDTO document) {
         Document documentEntity = documentMapper.toEntity(document, this);
+        Set<Long> ids =  extractLinkedDocumentIdsFromDocumentContent(document.getContent());
+        documentEntity.setLinkedDocuments(documentRepository.findAllByDocumentIds(ids));
+
         return documentRepository.save(documentEntity).getDocumentId();
     }
 
@@ -40,6 +46,14 @@ public class DocumentServiceImpl implements DocumentService{
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         );
         Document updatedDocument = documentMapper.toEntity(document, this);
+
+        if(updatedDocument.getDocumentId() == null){
+            updatedDocument.setDocumentId(documentId);
+        }
+
+        Set<Long> ids =  extractLinkedDocumentIdsFromDocumentContent(document.getContent());
+        updatedDocument.setLinkedDocuments(documentRepository.findAllByDocumentIds(ids));
+
         documentRepository.save(updatedDocument);
     }
 
@@ -70,5 +84,23 @@ public class DocumentServiceImpl implements DocumentService{
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         );
         documentRepository.delete(document);
+    }
+
+    private Set<Long> extractLinkedDocumentIdsFromDocumentContent(String content) {
+        if (content == null) {
+            return new HashSet<>();
+        }
+        // Regular expression to find [[documentId|...]] patterns
+        Pattern pattern = Pattern.compile("\\[\\[(\\d+).*?]]", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(content);
+        Set<Long> linkedDocumentIds = new HashSet<>();
+        while (matcher.find()) {
+
+            for (int i = 1; i <= matcher.groupCount(); i++) {
+                linkedDocumentIds.add(Long.parseLong(matcher.group(i)));
+            }
+        }
+
+        return linkedDocumentIds;
     }
 }
