@@ -1,71 +1,69 @@
-"use client";
-import Link from "next/link";
-import {useEffect, useState} from "react";
-import {useParams} from "next/navigation";
-import {DocumentBody} from "@/utils/types/documentBody.type";
-import {Texteditor} from "@/components/Texteditor";
-import {getDocumentById, updateDocumentById} from "@/services/documentService";
+'use client'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import { DocumentBody } from '@/utils/types/documentBody.type'
+import { Texteditor } from '@/components/texteditor/Texteditor'
+import { getDocumentById, updateDocumentById } from '@/services/documentService'
 
 export default function Document() {
-    const [document, setDocument] = useState<DocumentBody | null>(null);
-    const [updatedDocument, setUpdatedDocument] = useState<DocumentBody | null>(null);
+    const [document, setDocument] = useState<DocumentBody | null>(null)
+    const [updatedDocument, setUpdatedDocument] = useState<DocumentBody | null>(null)
     const params = useParams<{ documentId: string }>()
-    const documentId = parseInt(params.documentId, 10);
+    const documentId = parseInt(params.documentId, 10)
     useEffect(() => {
         const fetchDocument = async () => {
-            const result = await getDocumentById(documentId);
-            setDocument(result);
-            setUpdatedDocument(result);
+            const result = await getDocumentById(documentId)
+            setDocument(result)
+            setUpdatedDocument(result)
         }
         fetchDocument()
-    }, [documentId]);
+    }, [documentId])
 
     useEffect(() => {
         const interval = setInterval(async () => {
             if (updatedDocument && JSON.stringify(document) !== JSON.stringify(updatedDocument)) {
                 await updateDocumentById(documentId, updatedDocument)
-                setDocument(updatedDocument);
+                setDocument(updatedDocument)
             }
         }, 5000)
 
         return () => clearInterval(interval)
-    }, [document, documentId, updatedDocument]);
+    }, [document, documentId, updatedDocument])
 
     useEffect(() => {
         const handleUnload = async () => {
             if (updatedDocument && JSON.stringify(document) !== JSON.stringify(updatedDocument)) {
                 await updateDocumentById(documentId, updatedDocument)
-                setDocument(updatedDocument);
+                setDocument(updatedDocument)
             }
-        };
+        }
 
-        window.addEventListener('unload', handleUnload);
-        return () => window.removeEventListener('unload', handleUnload);
-    }, [document, documentId, updatedDocument]);
+        window.addEventListener('unload', handleUnload)
+        return () => window.removeEventListener('unload', handleUnload)
+    }, [document, documentId, updatedDocument])
 
-
-    if (!document || !updatedDocument) return <div>Loading...</div>;
+    if (!document || !updatedDocument) return <div>Loading...</div>
 
     return (
         <main className="w-screen h-screen flex justify-center items-center">
-            <Link
-                href={"/"}
-                className="text-4xl font-bold ml-10 absolute left-8 top-10"
-            >
+            <Link href={'/'} className="text-4xl font-bold ml-10 absolute left-16 top-10">
                 NeuroGraph
             </Link>
             <section className="w-2/3 h-2/3">
                 <input
                     value={updatedDocument.name}
-                    onChange={(e) => setUpdatedDocument({...updatedDocument, name: e.target.value})}
+                    onChange={(e) => setUpdatedDocument({ ...updatedDocument, name: e.target.value })}
                     className="w-full h-10 pl-1 text-2xl focus:outline-none"
                     placeholder="Titel"
                 />
                 <div className="h-[1px] w-full bg-border"></div>
-                <Texteditor className={"mt-2"} value={updatedDocument.content}
-                            onChange={(content: string) => setUpdatedDocument({...updatedDocument, content: content})}
+                <Texteditor
+                    className={'mt-2'}
+                    value={updatedDocument.content}
+                    onChange={(content: string) => setUpdatedDocument({ ...updatedDocument, content: content })}
                 ></Texteditor>
             </section>
         </main>
-    );
+    )
 }
