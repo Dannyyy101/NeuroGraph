@@ -101,6 +101,9 @@ button:hover{
 }
 
 @theme {
+  --color-fg-border: rgb(221, 221, 221);
   --color-border: rgb(235, 235, 235);
   --color-accent: rgb(235, 110, 60);
+  --color-fg-secondary: rgb(248, 215, 186);
+  --color-secondary: rgb(250, 226, 206)
 }

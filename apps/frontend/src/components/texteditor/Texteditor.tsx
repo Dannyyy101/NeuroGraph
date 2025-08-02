@@ -1,7 +1,9 @@
 'use client'
 import React, { useState } from 'react'
-import { converter } from '@/utils/mdConverter/converter'
+import { focusElement } from '@/utils/textEditorHelperFunctions'
+import { useRouter } from 'next/navigation'
 import { clsx } from 'clsx'
+import { Node } from '@/components/texteditor/Node'
 
 interface TexteditorProps {
     value: string
@@ -23,6 +25,9 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
 
     const [nodes, setNodes] = React.useState<{ id: number; text: string }[]>(defaultValue)
     const [activeElementId, setActiveElementId] = useState<number>(0)
+
+    const router = useRouter()
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         switch (e.key) {
             case 'Enter': {
@@ -68,21 +73,7 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
             setNodes((prev) => prev.toSpliced(index, 1))
             const newActiveElement = index === 0 ? nodes[1].id : nodes[index - 1].id
             setActiveElementId(newActiveElement)
-            setTimeout(() => {
-                const element = document.getElementById(String(newActiveElement)) as HTMLDivElement
-                if (element) {
-                    element.focus()
-                    const range = document.createRange()
-                    const selection = window.getSelection()
-
-                    range.selectNodeContents(element)
-                    range.collapse(false) // Collapse the range to the end
-                    if (selection) {
-                        selection.removeAllRanges()
-                        selection.addRange(range)
-                    }
-                }
-            }, 0)
+            focusElement(newActiveElement)
         }
     }
 
@@ -126,83 +117,9 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
                     value={node.text}
                     onChange={handleOnChangeOfText}
                     handleChangeActiveElement={setActiveElementId}
+                    router={router}
                 />
             ))}
         </div>
-    )
-}
-
-interface NodeProps {
-    position: number
-    activeElementId: number
-    handleChangeActiveElement: (id: number) => void
-    value: string
-    onChange: (text: string, id: number) => void
-}
-
-import getCaretCoordinates from 'textarea-caret'
-import { DocumentHead } from '@/utils/types/DocumentHead.type'
-import { getAllDocuments } from '@/services/documentService'
-import ContentEditable from 'react-contenteditable'
-
-const Node: React.FC<NodeProps> = ({ position, activeElementId, handleChangeActiveElement, value, onChange }) => {
-    const [labelPosition, setLabelPosition] = useState<{ x: number; y: number } | null>(null)
-    const [filteredNodes, setFilteredNodes] = useState<DocumentHead[]>([])
-
-    const handleOnClick = () => {
-        handleChangeActiveElement(position)
-        setTimeout(() => {
-            document.getElementById(String(position))?.focus()
-        }, 0)
-    }
-
-    const handleOnChange = async (text: string) => {
-        onChange(text, position)
-        const input = document.getElementById(String(position)) as HTMLInputElement
-        if (input && input.selectionEnd) {
-            const match = text.match(/\[\[(.*?)$/)
-            if (match) {
-                const cords = input.getBoundingClientRect()
-                const caret = getCaretCoordinates(input, input.selectionEnd)
-                const documents = await getAllDocuments({ name: match[1] })
-                setFilteredNodes(documents)
-                setLabelPosition({ x: caret.left + cords.x - 15, y: caret.top + cords.y + 20 })
-            } else {
-                setLabelPosition(null)
-            }
-        }
-    }
-
-    const handleAddLink = (id: number, name: string) => {
-        const link = value.replace(/\[\[(.*?)$/, `[[${id}|${name}]]`)
-        onChange(link, position)
-        setLabelPosition(null)
-        setTimeout(() => {
-            document.getElementById(String(position))?.focus()
-        }, 0)
-    }
-    const active = activeElementId === position
-    return (
-        <>
-            {labelPosition && (
-                <div
-                    className={`absolute flex flex-col items-start`}
-                    style={{ top: `${labelPosition.y}px`, left: `${labelPosition.x}px` }}
-                >
-                    {filteredNodes.map((node) => (
-                        <button key={node.documentId} onClick={() => handleAddLink(node.documentId, node.name)}>
-                            {node.name}
-                        </button>
-                    ))}
-                </div>
-            )}
-            <ContentEditable
-                id={position}
-                html={active ? value : converter(value)}
-                onChange={(e) => handleOnChange(e.target.value)}
-                onMouseDown={handleOnClick}
-                className={'ml-1 w-full min-h-6 focus:outline-none select-text'}
-            ></ContentEditable>
-        </>
     )
 }

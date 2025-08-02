@@ -8,5 +8,5 @@ export const converter = (text: string) => {
     if (text.match(/^---/))
         return "<div class='w-full h-6 flex items-center'><div class='h-[1px] w-full  bg-border'></div></div>"
 
-    return text.replace(/\[\[(.*?)\|(.*?)]]/g, '<a href=$1>$2</a>')
+    return text.replace(/\[\[(.*?)\|(.*?)]]/g, '<a class="hover:cursor-pointer" href=$1>$2</a>')
 }
