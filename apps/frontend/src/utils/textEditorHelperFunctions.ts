@@ -15,3 +15,16 @@ export const focusElement = (id: number) => {
         }
     }, 0)
 }
+
+export const getCaretPositionOfDiv = (element: HTMLElement, text: string) => {
+    const selection = window.getSelection()
+    if (!selection) return
+    const temp = element.cloneNode(true) as HTMLDivElement
+    temp.innerText = text
+    temp.style.width = 'fit-content'
+    temp.style.height = 'fit-content'
+    document.body.appendChild(temp)
+    const coordinates = temp.getBoundingClientRect()
+    document.body.removeChild(temp)
+    return coordinates
+}

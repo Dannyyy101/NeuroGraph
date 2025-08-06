@@ -1,7 +1,7 @@
 package com.neurograph.backend.utils.mapper;
 
-import com.neurograph.backend.dtos.DocumentDTO;
-import com.neurograph.backend.dtos.DocumentHeadDTO;
+import com.neurograph.backend.dtos.DocumentDto;
+import com.neurograph.backend.dtos.DocumentHeadDto;
 import com.neurograph.backend.models.Document;
 import com.neurograph.backend.services.DocumentService;
 import org.modelmapper.ModelMapper;
@@ -20,7 +20,7 @@ public class DocumentMapper {
     }
 
 
-    public Document toEntity(DocumentDTO documentDTO, DocumentService documentService) {
+    public Document toEntity(DocumentDto documentDTO, DocumentService documentService) {
         Document document = modelMapper.map(documentDTO, Document.class);
         if(documentDTO.getLinkedDocumentIds() != null) {
             Set<Document> resolvedDocuments = documentService.getDocumentsByIds(documentDTO.linkedDocumentIds);
@@ -29,14 +29,12 @@ public class DocumentMapper {
         return document;
     }
 
-    public DocumentDTO toDTO(Document document) {
-        DocumentDTO documentDTO = modelMapper.map(document, DocumentDTO.class);
-
-        return documentDTO;
+    public DocumentDto toDTO(Document document) {
+        return modelMapper.map(document, DocumentDto.class);
     }
 
-    public DocumentHeadDTO toHeadDTO(Document document) {
-        DocumentHeadDTO documentHeadDTO = modelMapper.map(document, DocumentHeadDTO.class);
+    public DocumentHeadDto toHeadDTO(Document document) {
+        DocumentHeadDto documentHeadDTO = modelMapper.map(document, DocumentHeadDto.class);
         documentHeadDTO.setLinkedDocumentIds(document.getLinkedDocuments().stream().map(Document::getDocumentId).collect(Collectors.toSet()));
         return documentHeadDTO;
     }

@@ -3,12 +3,14 @@
 /* Recommended icon sizes */
 span.icon-size-20 {
   font-size: 20px;
+  font-weight: 100;
   font-variation-settings: "OPSZ" 20;
 }
 span.icon-size-24 {
   font-size: 24px;
   font-variation-settings: "OPSZ" 24;
 }
+
 span.icon-size-32 {
   font-size: 32px;
   font-variation-settings: "OPSZ" 32;
@@ -99,6 +101,13 @@ span.icon-size-48 {
 button:hover{
   cursor: pointer;
 }
+
+td{
+  border: 1px var(--color-border) solid;
+  padding-left: 6px;
+  max-height: 20px;
+}
+
 
 @theme {
   --color-fg-border: rgb(221, 221, 221);

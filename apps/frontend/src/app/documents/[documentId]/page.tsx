@@ -46,7 +46,7 @@ export default function Document() {
     if (!document || !updatedDocument) return <div>Loading...</div>
 
     return (
-        <main className="w-screen h-screen flex justify-center items-center">
+        <main className="w-full h-screen flex justify-center items-center">
             <Link href={'/'} className="text-4xl font-bold ml-10 absolute left-16 top-10">
                 NeuroGraph
             </Link>
