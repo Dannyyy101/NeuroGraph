@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import { DocumentHead } from '@/utils/types/DocumentHead.type'
 import { getAllDocuments } from '@/services/documentService'
 import ContentEditable from 'react-contenteditable'
-import { focusElement } from '@/utils/textEditorHelperFunctions'
+import { focusElement, getCaretPositionOfDiv } from '@/utils/textEditorHelperFunctions'
 import { converter } from '@/utils/mdConverter/converter'
+import { Toolbar } from '@/components/texteditor/Toolbar'
 
 interface NodeProps {
     position: number
@@ -14,6 +15,8 @@ interface NodeProps {
     value: string
     onChange: (text: string, id: number) => void
     router: AppRouterInstance
+    toolbar: { text: string; position: { x: number; y: number } } | null
+    closeToolbar: () => void
 }
 
 export const Node: React.FC<NodeProps> = ({
@@ -23,6 +26,8 @@ export const Node: React.FC<NodeProps> = ({
     value,
     onChange,
     router,
+    toolbar,
+    closeToolbar,
 }) => {
     const [labelPosition, setLabelPosition] = useState<{ x: number; y: number } | null>(null)
     const [filteredNodes, setFilteredNodes] = useState<DocumentHead[]>([])
@@ -47,13 +52,10 @@ export const Node: React.FC<NodeProps> = ({
             const selection = window.getSelection()
             if (match && selection) {
                 const documentSearchName = match[1]
-                const temp = input.cloneNode(true) as HTMLDivElement
-                temp.innerText = text.slice(0, selection.anchorOffset - documentSearchName.length)
-                temp.style.width = 'fit-content'
-                temp.style.height = 'fit-content'
-                document.body.appendChild(temp)
-                const coordinates = temp.getBoundingClientRect()
-                document.body.removeChild(temp)
+                const slicedText = text.slice(0, selection.anchorOffset - documentSearchName.length)
+                const coordinates = getCaretPositionOfDiv(input, slicedText)
+
+                if (!coordinates) return
 
                 const cords = input.getBoundingClientRect()
                 const documents = await getAllDocuments(
@@ -77,6 +79,7 @@ export const Node: React.FC<NodeProps> = ({
 
     return (
         <>
+            {active && toolbar && <Toolbar position={toolbar.position} text={toolbar.text} close={closeToolbar} />}
             {labelPosition && filteredNodes.length > 0 && (
                 <li
                     className={`z-10 bg-white rounded-md absolute flex flex-col items-start w-32 max-h-20 overflow-y-auto border-border border`}

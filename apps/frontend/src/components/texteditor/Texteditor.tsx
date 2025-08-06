@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { focusElement } from '@/utils/textEditorHelperFunctions'
+import { focusElement, getCaretPositionOfDiv } from '@/utils/textEditorHelperFunctions'
 import { useRouter } from 'next/navigation'
 import { clsx } from 'clsx'
 import { Node } from '@/components/texteditor/Node'
@@ -24,6 +24,7 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
             : [{ id: 0, text: '' }]
 
     const [nodes, setNodes] = React.useState<{ id: number; text: string }[]>(defaultValue)
+    const [toolbar, setToolbar] = useState<{ text: string; position: { x: number; y: number } } | null>(null)
     const [activeElementId, setActiveElementId] = useState<number>(0)
 
     const router = useRouter()
@@ -104,11 +105,35 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
         setNodes(temp)
         onChange(temp.map((node) => node.text).join('\n'))
     }
+
+    const handleOnMouseUp = () => {
+        // TODO IMPLEMENT OWN SELECTION LOGIC FOR FULL TEXT SELECTION
+        const selection = window.getSelection()
+        if (!selection) return
+
+        const start = selection.anchorOffset
+        const end = selection.focusOffset
+        if (start === end && !toolbar) {
+            setToolbar(null)
+            return
+        }
+        const input = document.getElementById(String(activeElementId)) as HTMLDivElement
+        const text = input.innerText.slice(start, end)
+        const coordinates = getCaretPositionOfDiv(input, text)
+        const cords = input.getBoundingClientRect()
+        if (coordinates) {
+            setToolbar({
+                text: text,
+                position: { x: coordinates.left - cords.x - 620, y: coordinates.height + cords.y - 90 },
+            })
+        }
+    }
+
     const defaultStyle = 'w-full h-full select-text outline-none'
     const style = clsx(defaultStyle, className)
 
     return (
-        <div className={style} tabIndex={-1} onKeyDown={handleKeyDown}>
+        <div onMouseUp={handleOnMouseUp} className={style} tabIndex={-1} onKeyDown={handleKeyDown}>
             {nodes.map((node) => (
                 <Node
                     key={node.id}
@@ -118,6 +143,8 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
                     onChange={handleOnChangeOfText}
                     handleChangeActiveElement={setActiveElementId}
                     router={router}
+                    toolbar={toolbar}
+                    closeToolbar={() => setToolbar(null)}
                 />
             ))}
         </div>

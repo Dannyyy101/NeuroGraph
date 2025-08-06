@@ -1,7 +1,7 @@
 package com.neurograph.backend.services;
 
-import com.neurograph.backend.dtos.DocumentDTO;
-import com.neurograph.backend.dtos.DocumentHeadDTO;
+import com.neurograph.backend.dtos.DocumentDto;
+import com.neurograph.backend.dtos.DocumentHeadDto;
 import com.neurograph.backend.models.Document;
 import com.neurograph.backend.repositorys.DocumentRepository;
 import com.neurograph.backend.utils.mapper.DocumentMapper;
@@ -24,7 +24,7 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public Set<DocumentHeadDTO> getAllDocumentHeads(String name) {
+    public Set<DocumentHeadDto> getAllDocumentHeads(String name) {
         ArrayList<Document> documents = null;
         if (name != null) {
             documents = documentRepository.findAllByNameContainingIgnoreCase(name);
@@ -38,7 +38,7 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public Long createDocument(DocumentDTO document) {
+    public Long createDocument(DocumentDto document) {
         Document documentEntity = documentMapper.toEntity(document, this);
         Set<Long> ids =  extractLinkedDocumentIdsFromDocumentContent(document.getContent());
         documentEntity.setLinkedDocuments(documentRepository.findAllByDocumentIds(ids));
@@ -47,7 +47,7 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public void updateDocument(Long documentId, DocumentDTO document) {
+    public void updateDocument(Long documentId, DocumentDto document) {
         documentRepository.findById(documentId).orElseThrow(
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         );
@@ -78,7 +78,7 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public DocumentDTO getDocumentById(Long documentId) {
+    public DocumentDto getDocumentById(Long documentId) {
         return documentMapper.toDTO(documentRepository.findById(documentId).orElseThrow(
                 () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
         ));
@@ -101,7 +101,6 @@ public class DocumentServiceImpl implements DocumentService{
         Matcher matcher = pattern.matcher(content);
         Set<Long> linkedDocumentIds = new HashSet<>();
         while (matcher.find()) {
-
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 linkedDocumentIds.add(Long.parseLong(matcher.group(i)));
             }

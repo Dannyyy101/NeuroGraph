@@ -5,10 +5,11 @@ import lombok.Setter;
 
 import java.util.Set;
 
-@Setter
 @Getter
-public class DocumentHeadDTO {
+@Setter
+public class DocumentDto {
     private Long documentId;
     private String name;
-    private Set<Long> linkedDocumentIds;
+    private String content;
+    public Set<Long> linkedDocumentIds;
 }
