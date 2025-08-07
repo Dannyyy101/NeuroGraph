@@ -7,5 +7,8 @@ export default {
         authorized: async ({ auth }) => {
             return !!auth
         },
+        redirect: async ({ baseUrl }) => {
+            return `${baseUrl}`
+        },
     },
 } satisfies NextAuthConfig

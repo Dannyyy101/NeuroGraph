@@ -14,8 +14,6 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000,
 })
 
-console.log(process.env.DB_HOST)
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PostgresAdapter(pool),
     session: { strategy: 'jwt' },
