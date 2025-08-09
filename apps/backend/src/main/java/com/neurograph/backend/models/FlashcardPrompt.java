@@ -21,7 +21,12 @@ public class FlashcardPrompt {
     private Long flashcardPromptId;
     @Column(columnDefinition = "TEXT")
     private String prompt;
-    @OneToMany(mappedBy = "prompt", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
+    @JoinTable(
+            name = "PROMPT_TO_FLASHCARD",
+            joinColumns = @JoinColumn(name = "flashcard_prompt_id"),
+            inverseJoinColumns = @JoinColumn(name = "flashcard_id")
+    )
     private Set<Flashcard> flashcards = new HashSet<>();
     private Date createdOn = new Date();
 

@@ -1,6 +1,5 @@
 package com.neurograph.backend.utils.mapper;
 
-
 import com.neurograph.backend.dtos.FlashcardDto;
 import com.neurograph.backend.models.Flashcard;
 import org.modelmapper.ModelMapper;
@@ -22,5 +21,11 @@ public class FlashcardMapper {
 
     public FlashcardDto toDTO(Flashcard flashcard) {
         return modelMapper.map(flashcard, FlashcardDto.class);
+    }
+
+    public void updateFromDto(FlashcardDto flashcardDto, Flashcard entity){
+        if(flashcardDto.getQuestion() != null) entity.setQuestion(flashcardDto.getQuestion());
+        if(flashcardDto.getAnswer() != null) entity.setAnswer(flashcardDto.getAnswer());
+        if(flashcardDto.getActive() != null) entity.setActive(flashcardDto.getActive());
     }
 }

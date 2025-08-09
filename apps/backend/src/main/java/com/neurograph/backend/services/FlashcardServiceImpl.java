@@ -17,10 +17,7 @@ import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -72,7 +69,7 @@ public class FlashcardServiceImpl implements FlashcardService {
                 .flatMap(responseDto -> Mono.fromCallable(() -> {
                                     Flashcard fc = new Flashcard();
                                     String[] message = responseDto.getMessage().getContent().split(":");
-
+                                    System.out.println(Arrays.toString(message));
                                     if(message.length != 2){
                                         return null;
                                     }
@@ -83,16 +80,16 @@ public class FlashcardServiceImpl implements FlashcardService {
                                     fc.setCreatedOn(new Date());
                                     fc.setQuestion(question);
                                     fc.setAnswer(answer);
-                                    fc.setPrompt(savedFlashcardPrompt);
                                     return flashcardRepository.save(fc);
                                 })
                                 .subscribeOn(Schedulers.boundedElastic())
                 )
-                .doOnNext(saved -> {
-                    if(saved != null) {
-                        savedFlashcardPrompt.getFlashcards().add(saved);
-                    }
-                }).subscribe();
+                .filter(Objects::nonNull)
+                .collectList()
+                .subscribe(flashcards -> {
+                    savedFlashcardPrompt.getFlashcards().addAll(flashcards);
+                    flashcardPromptRepository.save(savedFlashcardPrompt);
+                });
     }
 
     @Override
@@ -105,6 +102,44 @@ public class FlashcardServiceImpl implements FlashcardService {
     public Set<FlashcardPromptDto> getFlashCardPrompts() {
         ArrayList<FlashcardPrompt> flashcards = (ArrayList<FlashcardPrompt>)flashcardPromptRepository.findAll();
         return flashcards.stream().map((flashcardPromptMapper::toDTO)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public FlashcardPromptDto getFlashCardPromptById(Long flashcardPromptId) {
+        FlashcardPrompt flashcardPrompt = flashcardPromptRepository.findById(flashcardPromptId).orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        return flashcardPromptMapper.toDTO(flashcardPrompt);
+    }
+
+    @Override
+    public FlashcardDto updateFlashcardById(Long flashcardId, FlashcardDto flashcardDto) {
+        // TODO CHECK IF FULL DTO WAS PROVIDED
+        Flashcard entity = flashcardRepository.findById(flashcardId).orElseThrow(() ->new RuntimeException("NOT FOUND"));
+        flashcardMapper.updateFromDto(flashcardDto, entity);
+        return flashcardMapper.toDTO(flashcardRepository.save(entity));
+    }
+
+    @Override
+    public FlashcardDto getFlashcardById(Long flashcardId) {
+        return flashcardMapper.toDTO(flashcardRepository.findById(flashcardId).orElseThrow(() -> new RuntimeException("NOT FOUND")));
+    }
+
+    @Override
+    public FlashcardDto partialUpdateFlashcardById(Long flashcardId, FlashcardDto flashcardDto) {
+        Flashcard entity = flashcardRepository.findById(flashcardId).orElseThrow(() ->new RuntimeException("NOT FOUND"));
+        flashcardMapper.updateFromDto(flashcardDto, entity);
+        return flashcardMapper.toDTO(flashcardRepository.save(entity));
+    }
+
+    @Override
+    public void deleteFlashcardById(Long flashcardId) {
+        if(!flashcardRepository.existsById(flashcardId)) throw new RuntimeException("NOT FOUND");
+        flashcardRepository.deleteById(flashcardId);
+    }
+
+    @Override
+    public void deleteFlashcardPromptById(Long flashcardPromptId) {
+        if(!flashcardPromptRepository.existsById(flashcardPromptId)) throw new RuntimeException("NOT FOUND");
+        flashcardPromptRepository.deleteById(flashcardPromptId);
     }
 
     private Mono<ChatResponseDto> makeAiApiCall(ChatRequestDto body) {

@@ -44,7 +44,12 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.6.3</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
 		<dependency>
 			<groupId>org.springframework</groupId>

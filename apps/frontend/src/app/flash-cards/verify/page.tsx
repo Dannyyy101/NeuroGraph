@@ -1,4 +1,5 @@
 import { getAllPrompts } from '@/services/flashcardService'
+import Link from 'next/link'
 
 export default async function Page() {
     const prompts = await getAllPrompts()
@@ -18,7 +19,9 @@ export default async function Page() {
                 <tbody>
                     {prompts.map((prompt) => (
                         <tr key={prompt.flashcardPromptId} className={'border border-border'}>
-                            <td>{prompt.prompt}</td>
+                            <td>
+                                <Link href={`/flash-cards/verify/${prompt.flashcardPromptId}`}>{prompt.prompt}</Link>
+                            </td>
                             <td>{prompt.createdOn && new Date(prompt.createdOn).toISOString().split('T')[0]}</td>
                         </tr>
                     ))}
