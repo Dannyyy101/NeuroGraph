@@ -1,13 +1,11 @@
 package com.neurograph.backend.controller;
 
-import com.neurograph.backend.dtos.ChatResponseDto;
 import com.neurograph.backend.dtos.FlashcardPromptDto;
 import com.neurograph.backend.dtos.FlashcardDto;
 import com.neurograph.backend.services.FlashcardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import java.util.Set;
 
@@ -32,14 +30,46 @@ public class FlashcardController {
         return new ResponseEntity<>(flashcardService.getAllFlashcards(), HttpStatus.OK);
     }
 
+    @GetMapping("/{flashcardId}")
+    public ResponseEntity<FlashcardDto> getFlashcardById(@PathVariable String flashcardId) {
+        return new ResponseEntity<>(flashcardService.getFlashcardById(Long.valueOf(flashcardId)), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{flashcardId}")
+    public ResponseEntity<Void> deleteFlashcardById(@PathVariable String flashcardId) {
+        flashcardService.deleteFlashcardById(Long.valueOf(flashcardId));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{flashcardId}")
+    public ResponseEntity<FlashcardDto> partialUpdateFlashcardById(@PathVariable String flashcardId, @RequestBody FlashcardDto flashcardDto) {
+        return new ResponseEntity<>(flashcardService.partialUpdateFlashcardById(Long.valueOf(flashcardId), flashcardDto), HttpStatus.OK);
+    }
+
+    @PutMapping("/{flashcardId}")
+    public ResponseEntity<FlashcardDto> updateFlashcardById(@PathVariable String flashcardId, @RequestBody FlashcardDto flashcardDto) {
+        return new ResponseEntity<>(flashcardService.updateFlashcardById(Long.valueOf(flashcardId), flashcardDto), HttpStatus.OK);
+    }
+
     @PostMapping("/ai")
     public ResponseEntity<Long> createFlashcardWithAi(@RequestBody FlashcardPromptDto flashcardPromptDto) {
         flashcardService.createFlashcardWithAi(flashcardPromptDto);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/ai")
+    @GetMapping("/prompts")
     public ResponseEntity<Set<FlashcardPromptDto>> getFlashCardPrompts() {
         return new ResponseEntity<>(flashcardService.getFlashCardPrompts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/prompts/{flashcardPromptId}")
+    public ResponseEntity<FlashcardPromptDto> getFlashCardPromptById(@PathVariable String  flashcardPromptId) {
+        return new ResponseEntity<>(flashcardService.getFlashCardPromptById(Long.valueOf(flashcardPromptId)), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/prompts/{flashcardPromptId}")
+    public ResponseEntity<FlashcardPromptDto> deleteFlashCardPromptById(@PathVariable String  flashcardPromptId) {
+        flashcardService.deleteFlashcardPromptById(Long.valueOf(flashcardPromptId));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
