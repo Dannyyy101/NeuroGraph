@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { GraphData } from '@/utils/types/GraphData.type'
 import { useRouter } from 'next/navigation'
 import { createNewDocument, getAllDocuments } from '@/services/documentService'
+import { keycloak } from '@/lib/keycloak/init'
 
 export default function Home() {
     const router = useRouter()
