@@ -69,7 +69,7 @@ export default function Home() {
 
     const handleAddDocument = async () => {
         const { result } = await createNewDocument(userInput)
-        router.push(`/documents/${result}`)
+        router.push(`/documents/${result?.documentId}`)
     }
 
     return (

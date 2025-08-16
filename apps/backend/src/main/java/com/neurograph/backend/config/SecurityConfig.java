@@ -69,9 +69,6 @@ public class SecurityConfig {
     public SecurityFilterChain developmentSecurityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(unauthorizedHandler)
-                )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests.anyRequest().permitAll()
                 );

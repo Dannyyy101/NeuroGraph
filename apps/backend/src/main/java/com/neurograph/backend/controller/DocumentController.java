@@ -25,9 +25,12 @@ public class DocumentController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Long> createDocument(@RequestBody DocumentDto document){
-        Long documentId = documentService.createDocument(document);
-        return new ResponseEntity<>(documentId, HttpStatus.CREATED);
+    public ResponseEntity<DocumentDto> createDocument(@RequestBody DocumentDto document, @RequestHeader("Prefer") String preferHeader){
+        DocumentDto documentDto = documentService.createDocument(document);
+        if(preferHeader != null && preferHeader.equals("return=representation")){
+            return new ResponseEntity<>(documentDto, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{documentId}")

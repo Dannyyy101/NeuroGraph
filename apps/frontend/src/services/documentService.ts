@@ -20,12 +20,13 @@ export const getDocumentById = async (documentId: number) => {
 }
 
 export const createNewDocument = async (title: string) => {
-    return await request<number>(`${BACKEND_URL}/documents/`, {
+    return await request<DocumentBody>(`${BACKEND_URL}/documents/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            Prefer: 'return=representation',
         },
-        body: JSON.stringify({ name: title, content: '' }),
+        body: { name: title, content: '' },
     })
 }
 
@@ -36,5 +37,11 @@ export const updateDocumentById = async (documentId: number, updatedDocument: Do
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedDocument),
+    })
+}
+
+export const deleteDocumentById = async (documentId: number) => {
+    await request<Void>(`${BACKEND_URL}/documents/${documentId}`, {
+        method: 'DELETE',
     })
 }

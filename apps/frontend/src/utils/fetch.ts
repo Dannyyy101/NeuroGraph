@@ -11,16 +11,16 @@ export async function request<T>(url: string, { method, body, headers }: Request
         const response = await fetch(url, {
             method,
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
                 ...headers,
             },
             body: body ? JSON.stringify(body) : undefined,
         })
-
+        console.log(response)
         if (!response.ok) {
             const errorResponse = (await response.json()) as ApiError
             const errorMessage = errorResponse.message
+            console.log(errorResponse)
             return { result: null, error: errorMessage }
         }
 
