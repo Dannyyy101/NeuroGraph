@@ -1,9 +1,9 @@
 import { BACKEND_URL } from '@/utils/constants'
 import { User } from '@/utils/types/user.type'
+import { request } from '@/utils/fetch'
 
 export const getUserById = async (userId: number) => {
-    const response = await fetch(`${BACKEND_URL}/users/${userId}`, {
+    return await request<User>(`${BACKEND_URL}/users/${userId}`, {
         method: 'GET',
     })
-    return (await response.json()) as User
 }

@@ -2,6 +2,7 @@ package com.neurograph.backend.services;
 
 import com.neurograph.backend.dtos.DocumentDto;
 import com.neurograph.backend.dtos.DocumentHeadDto;
+import com.neurograph.backend.exceptions.ResourceNotFoundException;
 import com.neurograph.backend.models.Document;
 import com.neurograph.backend.repositorys.DocumentRepository;
 import com.neurograph.backend.utils.mapper.DocumentMapper;
@@ -25,7 +26,7 @@ public class DocumentServiceImpl implements DocumentService{
 
     @Override
     public Set<DocumentHeadDto> getAllDocumentHeads(String name) {
-        ArrayList<Document> documents = null;
+        ArrayList<Document> documents;
         if (name != null) {
             documents = documentRepository.findAllByNameContainingIgnoreCase(name);
         } else {
@@ -49,7 +50,7 @@ public class DocumentServiceImpl implements DocumentService{
     @Override
     public void updateDocument(Long documentId, DocumentDto document) {
         documentRepository.findById(documentId).orElseThrow(
-                () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
+                () -> new ResourceNotFoundException("Document", documentId)
         );
         Document updatedDocument = documentMapper.toEntity(document, this);
 
@@ -67,7 +68,7 @@ public class DocumentServiceImpl implements DocumentService{
     public Set<Document> getDocumentsByIds(Set<Long> documentIds) {
         Set<Document> documentSet = documentRepository.findAllByDocumentIds(documentIds);
         if (documentSet.size() != documentIds.size()) {
-            throw new IllegalArgumentException("Some documents not found");
+            throw new ResourceNotFoundException("Some documents could not be found");
         }
         return documentSet;
     }
@@ -80,14 +81,14 @@ public class DocumentServiceImpl implements DocumentService{
     @Override
     public DocumentDto getDocumentById(Long documentId) {
         return documentMapper.toDTO(documentRepository.findById(documentId).orElseThrow(
-                () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
+                () -> new ResourceNotFoundException("Document", documentId)
         ));
     }
 
     @Override
     public void deleteDocumentById(Long documentId) {
         Document document = documentRepository.findById(documentId).orElseThrow(
-                () -> new IllegalArgumentException("Document with id " + documentId + " does not exist")
+                () -> new ResourceNotFoundException("Document", documentId)
         );
         documentRepository.delete(document);
     }

@@ -35,6 +35,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
       AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     ports:
       - "${SPRING_PORT}:8080"
     depends_on:

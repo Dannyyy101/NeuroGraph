@@ -1,8 +1,10 @@
 import { BACKEND_URL } from '@/utils/constants'
 import { FlashcardPrompt } from '@/utils/types/FlashcardPrompt.type'
+import { request } from '@/utils/fetch'
+import { Void } from '@/utils/types/api.type'
 
 export const generateFlashCardsByAi = async (text: string) => {
-    await fetch(`${BACKEND_URL}/flashcards/ai`, {
+    await request<Void>(`${BACKEND_URL}/flashcards/ai`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -12,22 +14,19 @@ export const generateFlashCardsByAi = async (text: string) => {
 }
 
 export const getAllPrompts = async () => {
-    const response = await fetch(`${BACKEND_URL}/flashcards/prompts`, {
+    return await request<FlashcardPrompt[]>(`${BACKEND_URL}/flashcards/prompts`, {
         method: 'GET',
     })
-    return (await response.json()) as FlashcardPrompt[]
 }
 
 export const getFlashcardPromptById = async (flashcardPromptId: number) => {
-    const response = await fetch(`${BACKEND_URL}/flashcards/prompts/${flashcardPromptId}`, {
+    return await request<FlashcardPrompt>(`${BACKEND_URL}/flashcards/prompts/${flashcardPromptId}`, {
         method: 'GET',
     })
-    if (!response.ok) return null
-    return (await response.json()) as FlashcardPrompt
 }
 
 export const activateFlashcard = async (flashcardId: number) => {
-    await fetch(`${BACKEND_URL}/flashcards/${flashcardId}`, {
+    await request<Void>(`${BACKEND_URL}/flashcards/${flashcardId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -37,13 +36,13 @@ export const activateFlashcard = async (flashcardId: number) => {
 }
 
 export const deleteFlashcardById = async (flashcardId: number) => {
-    await fetch(`${BACKEND_URL}/flashcards/${flashcardId}`, {
+    await request<Void>(`${BACKEND_URL}/flashcards/${flashcardId}`, {
         method: 'DELETE',
     })
 }
 
 export const deleteFlashcardPromptById = async (flashcardPromptId: number) => {
-    await fetch(`${BACKEND_URL}/flashcards/prompts/${flashcardPromptId}`, {
+    await request<Void>(`${BACKEND_URL}/flashcards/prompts/${flashcardPromptId}`, {
         method: 'DELETE',
     })
 }

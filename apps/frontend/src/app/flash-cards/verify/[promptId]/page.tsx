@@ -17,7 +17,8 @@ export default function Prompt() {
 
     useEffect(() => {
         const fetch = async () => {
-            getFlashcardPromptById(parseInt(params.promptId)).then((item) => setFlashcardPrompt(item))
+            const { result } = await getFlashcardPromptById(parseInt(params.promptId))
+            setFlashcardPrompt(result)
         }
         fetch()
     }, [params.promptId])

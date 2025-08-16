@@ -4,14 +4,24 @@ import { useEffect, useState } from 'react'
 import { GraphData } from '@/utils/types/GraphData.type'
 import { useRouter } from 'next/navigation'
 import { createNewDocument, getAllDocuments } from '@/services/documentService'
-import { keycloak } from '@/lib/keycloak/init'
 
 export default function Home() {
     const router = useRouter()
 
+    const [nodes, setNodes] = useState<GraphData | null>(null)
+    const [searchedNodes, setSearchedNodes] = useState<GraphData | null>(nodes)
+    const [userInput, setUserInput] = useState('')
+    const [errorMessage, setErrorMessage] = useState<string>('')
+
     useEffect(() => {
         const fetchDocuments = async () => {
-            const result = await getAllDocuments()
+            const { result, error } = await getAllDocuments()
+
+            if (!result || error) {
+                setErrorMessage(error)
+                return
+            }
+
             const nodes = result.map((item) => ({ id: item.documentId, name: item.name }))
             const links = result.map((item) =>
                 item.linkedDocumentIds.map((linkedId) => ({
@@ -25,9 +35,12 @@ export default function Home() {
         fetchDocuments()
     }, [])
 
-    const [nodes, setNodes] = useState<GraphData | null>(null)
-    const [searchedNodes, setSearchedNodes] = useState<GraphData | null>(nodes)
-    const [userInput, setUserInput] = useState('')
+    if (errorMessage)
+        return (
+            <div className={'text-red-600 text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'}>
+                {errorMessage}
+            </div>
+        )
 
     if (!nodes) return <div></div>
 
@@ -55,8 +68,8 @@ export default function Home() {
     }
 
     const handleAddDocument = async () => {
-        const id = await createNewDocument(userInput)
-        router.push(`/documents/${id}`)
+        const { result } = await createNewDocument(userInput)
+        router.push(`/documents/${result}`)
     }
 
     return (
