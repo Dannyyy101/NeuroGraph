@@ -39,12 +39,12 @@ public class DocumentServiceImpl implements DocumentService{
     }
 
     @Override
-    public Long createDocument(DocumentDto document) {
+    public DocumentDto createDocument(DocumentDto document) {
         Document documentEntity = documentMapper.toEntity(document, this);
         Set<Long> ids =  extractLinkedDocumentIdsFromDocumentContent(document.getContent());
         documentEntity.setLinkedDocuments(documentRepository.findAllByDocumentIds(ids));
 
-        return documentRepository.save(documentEntity).getDocumentId();
+        return documentMapper.toDTO(documentRepository.save(documentEntity));
     }
 
     @Override

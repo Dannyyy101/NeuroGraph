@@ -120,6 +120,52 @@ td {
     --color-border: rgb(235, 235, 235);
     --color-accent: rgb(235, 110, 60);
     --color-fg-accent: rgb(211, 87, 40);
+
     --color-fg-secondary: rgb(248, 215, 186);
-    --color-secondary: rgb(250, 226, 206)
+    --color-secondary: rgb(250, 226, 206);
+    /* Default / Neutral */
+    --color-fg-default: rgb(31, 35, 40);
+    --color-bg-default: rgb(255, 255, 255);
+
+    --color-fg-neutral: rgb(89, 99, 110);
+    --color-bg-neutral: rgb(246, 248, 250); /* statt neutral-muted (hat Alpha) */
+
+    /* Accent (Blue) */
+    --color-bg-accent-muted: rgb(221, 244, 255);
+    --color-bg-accent-emphasis: rgb(9, 105, 218);
+
+    /* Success / Open (Green) */
+    --color-fg-success: rgb(26, 127, 55);
+    --color-bg-success-muted: rgb(218, 251, 225);
+    --color-bg-success-emphasis: rgb(31, 136, 61);
+
+    /* Danger / Closed (Red) */
+    --color-fg-danger: rgb(209, 36, 47);
+    --color-bg-danger-muted: rgb(255, 255, 255);
+    --color-bg-danger-emphasis: rgb(207, 34, 46);
+
+    /* Attention / Warn (Yellow) */
+    --color-fg-attention: rgb(154, 103, 0);
+    --color-bg-attention-muted: rgb(255, 248, 197);
+    --color-bg-attention-emphasis: rgb(154, 103, 0);
+
+    /* Done / Purple */
+    --color-fg-done: rgb(130, 80, 223);
+    --color-bg-done-muted: rgb(251, 239, 255);
+    --color-bg-done-emphasis: rgb(130, 80, 223);
+
+    /* Sponsors / Pink */
+    --color-fg-sponsors: rgb(191, 57, 137);
+    --color-bg-sponsors-muted: rgb(255, 239, 247);
+    --color-bg-sponsors-emphasis: rgb(191, 57, 137);
+
+    /* Severe / Orange */
+    --color-fg-severe: rgb(188, 76, 0);
+    --color-bg-severe-muted: rgb(255, 241, 229);
+    --color-bg-severe-emphasis: rgb(188, 76, 0);
+
+    /* Für Labels mit „Emphasis“-Hintergrund */
+    --color-fg-on-emphasis: rgb(255, 255, 255);
+    --color-bg-emphasis: rgb(37, 41, 46);
+
 }

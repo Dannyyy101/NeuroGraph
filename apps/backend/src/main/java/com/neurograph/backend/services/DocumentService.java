@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface DocumentService {
     Set<DocumentHeadDto> getAllDocumentHeads(String name);
-    Long createDocument(DocumentDto document);
+    DocumentDto createDocument(DocumentDto document);
     void updateDocument(Long documentId, DocumentDto document);
     Set<Document> getDocumentsByIds(Set<Long> documentIds);
     Set<Long> getLinkedDocumentsFromDocument(Document document);
