@@ -2,6 +2,7 @@ package com.neurograph.backend.services;
 
 import com.neurograph.backend.config.AiProperties;
 import com.neurograph.backend.dtos.*;
+import com.neurograph.backend.exceptions.ResourceNotFoundException;
 import com.neurograph.backend.models.Flashcard;
 import com.neurograph.backend.models.FlashcardPrompt;
 import com.neurograph.backend.repositorys.FlashcardPromptRepository;
@@ -106,39 +107,39 @@ public class FlashcardServiceImpl implements FlashcardService {
 
     @Override
     public FlashcardPromptDto getFlashCardPromptById(Long flashcardPromptId) {
-        FlashcardPrompt flashcardPrompt = flashcardPromptRepository.findById(flashcardPromptId).orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        FlashcardPrompt flashcardPrompt = flashcardPromptRepository.findById(flashcardPromptId).orElseThrow(() -> new ResourceNotFoundException("FlashcardPrompt", flashcardPromptId));
         return flashcardPromptMapper.toDTO(flashcardPrompt);
     }
 
     @Override
     public FlashcardDto updateFlashcardById(Long flashcardId, FlashcardDto flashcardDto) {
         // TODO CHECK IF FULL DTO WAS PROVIDED
-        Flashcard entity = flashcardRepository.findById(flashcardId).orElseThrow(() ->new RuntimeException("NOT FOUND"));
+        Flashcard entity = flashcardRepository.findById(flashcardId).orElseThrow(() -> new ResourceNotFoundException("Flashcard", flashcardId));
         flashcardMapper.updateFromDto(flashcardDto, entity);
         return flashcardMapper.toDTO(flashcardRepository.save(entity));
     }
 
     @Override
     public FlashcardDto getFlashcardById(Long flashcardId) {
-        return flashcardMapper.toDTO(flashcardRepository.findById(flashcardId).orElseThrow(() -> new RuntimeException("NOT FOUND")));
+        return flashcardMapper.toDTO(flashcardRepository.findById(flashcardId).orElseThrow(() -> new ResourceNotFoundException("Flashcard", flashcardId)));
     }
 
     @Override
     public FlashcardDto partialUpdateFlashcardById(Long flashcardId, FlashcardDto flashcardDto) {
-        Flashcard entity = flashcardRepository.findById(flashcardId).orElseThrow(() ->new RuntimeException("NOT FOUND"));
+        Flashcard entity = flashcardRepository.findById(flashcardId).orElseThrow(() -> new ResourceNotFoundException("Flashcard", flashcardId));
         flashcardMapper.updateFromDto(flashcardDto, entity);
         return flashcardMapper.toDTO(flashcardRepository.save(entity));
     }
 
     @Override
     public void deleteFlashcardById(Long flashcardId) {
-        if(!flashcardRepository.existsById(flashcardId)) throw new RuntimeException("NOT FOUND");
+        if(!flashcardRepository.existsById(flashcardId)) throw new ResourceNotFoundException("Flashcard", flashcardId);
         flashcardRepository.deleteById(flashcardId);
     }
 
     @Override
     public void deleteFlashcardPromptById(Long flashcardPromptId) {
-        if(!flashcardPromptRepository.existsById(flashcardPromptId)) throw new RuntimeException("NOT FOUND");
+        if(!flashcardPromptRepository.existsById(flashcardPromptId)) throw new ResourceNotFoundException("FlashcardPrompt", flashcardPromptId);
         flashcardPromptRepository.deleteById(flashcardPromptId);
     }
 

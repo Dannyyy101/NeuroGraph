@@ -13,7 +13,7 @@ export default function Document() {
     const documentId = parseInt(params.documentId, 10)
     useEffect(() => {
         const fetchDocument = async () => {
-            const result = await getDocumentById(documentId)
+            const { result } = await getDocumentById(documentId)
             setDocument(result)
             setUpdatedDocument(result)
         }

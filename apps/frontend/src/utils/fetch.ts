@@ -1,6 +1,6 @@
 'use server'
 
-import { ApiResponse, RequestOptions } from '@/utils/types/api.type'
+import { ApiError, ApiResponse, RequestOptions } from '@/utils/types/api.type'
 import { cookies } from 'next/headers'
 
 export async function request<T>(url: string, { method, body, headers }: RequestOptions): Promise<ApiResponse<T>> {
@@ -19,7 +19,7 @@ export async function request<T>(url: string, { method, body, headers }: Request
         })
 
         if (!response.ok) {
-            const errorResponse = await response.json()
+            const errorResponse = (await response.json()) as ApiError
             const errorMessage = errorResponse.message
             return { result: null, error: errorMessage }
         }

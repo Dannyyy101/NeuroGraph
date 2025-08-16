@@ -1,4 +1,4 @@
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 export interface RequestOptions {
     method: HttpMethod
@@ -14,4 +14,10 @@ export interface ApiResponse<T> {
 export interface Void {
     result: 'No content'
     error: string
+}
+
+export interface ApiError {
+    status: number
+    message: string
+    timestamp: Date
 }

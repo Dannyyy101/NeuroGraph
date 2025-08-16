@@ -2,7 +2,9 @@ import { getAllPrompts } from '@/services/flashcardService'
 import Link from 'next/link'
 
 export default async function Page() {
-    const prompts = await getAllPrompts()
+    const { result } = await getAllPrompts()
+
+    if (!result) return <div>No Prompts found</div>
 
     return (
         <main className={'w-full h-screen flex-col flex items-center overflow-y-auto'}>
@@ -17,7 +19,7 @@ export default async function Page() {
                     </tr>
                 </thead>
                 <tbody>
-                    {prompts.map((prompt) => (
+                    {result.map((prompt) => (
                         <tr key={prompt.flashcardPromptId} className={'border border-border'}>
                             <td>
                                 <Link href={`/flash-cards/verify/${prompt.flashcardPromptId}`}>{prompt.prompt}</Link>
