@@ -9,7 +9,7 @@ export const generateFlashCardsByAi = async (text: string) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: text }),
+        body: { prompt: text },
     })
 }
 
@@ -31,7 +31,7 @@ export const activateFlashcard = async (flashcardId: number) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ active: true }),
+        body: { active: true },
     })
 }
 

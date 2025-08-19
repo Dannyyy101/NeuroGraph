@@ -30,7 +30,7 @@ export const Node: React.FC<NodeProps> = ({
     closeToolbar,
 }) => {
     const [labelPosition, setLabelPosition] = useState<{ x: number; y: number } | null>(null)
-    const [filteredNodes, setFilteredNodes] = useState<DocumentHead[]>([])
+    const [filteredNodes, setFilteredNodes] = useState<DocumentHead[] | null>([])
 
     const handleOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if ((e.target as HTMLElement).nodeName === 'A') {
@@ -48,7 +48,7 @@ export const Node: React.FC<NodeProps> = ({
         onChange(text, position)
         const input = document.getElementById(String(position)) as HTMLDivElement
         if (input) {
-            const match = text.match(/\[\[(.*?)(?:\s|$)/)
+            const match = text.match(/\[\[(?![^\]]*]])([A-Za-z0-9_]*)/)
             const selection = window.getSelection()
             if (match && selection) {
                 const documentSearchName = match[1]
@@ -58,11 +58,12 @@ export const Node: React.FC<NodeProps> = ({
                 if (!coordinates) return
 
                 const cords = input.getBoundingClientRect()
-                const documents = await getAllDocuments(
+                // TODO ADD FILTER THAT WHITE SPACES ARE IGNORED WHEN FILTERING BY THE DOCUMENT NAME
+                const { result } = await getAllDocuments(
                     documentSearchName.length > 0 ? { name: documentSearchName } : undefined
                 )
-                setFilteredNodes(documents)
-                setLabelPosition({ x: coordinates.width + cords.x - 52, y: coordinates.height + cords.y })
+                setFilteredNodes(result)
+                setLabelPosition({ x: coordinates.width + cords.x - 52, y: coordinates.height + cords.y - 20 })
             } else {
                 setLabelPosition(null)
             }
@@ -80,7 +81,7 @@ export const Node: React.FC<NodeProps> = ({
     return (
         <>
             {active && toolbar && <Toolbar position={toolbar.position} text={toolbar.text} close={closeToolbar} />}
-            {labelPosition && filteredNodes.length > 0 && (
+            {labelPosition && filteredNodes && filteredNodes.length > 0 && (
                 <li
                     className={`z-10 bg-white rounded-md absolute flex flex-col items-start w-32 max-h-20 overflow-y-auto border-border border`}
                     style={{ top: `${labelPosition.y}px`, left: `${labelPosition.x}px` }}
@@ -98,7 +99,7 @@ export const Node: React.FC<NodeProps> = ({
                 </li>
             )}
             <ContentEditable
-                id={position}
+                id={String(position)}
                 html={active ? value : converter(value)}
                 onChange={(e) => handleOnChange(e.target.value)}
                 onMouseDown={handleOnClick}
