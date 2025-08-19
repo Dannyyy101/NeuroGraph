@@ -90,6 +90,7 @@ public class DocumentServiceImpl implements DocumentService{
         Document document = documentRepository.findById(documentId).orElseThrow(
                 () -> new ResourceNotFoundException("Document", documentId)
         );
+        documentRepository.deleteLinksByDocumentId(documentId);
         documentRepository.delete(document);
     }
 

@@ -19,6 +19,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     const [loading, setLoading] = useState(true)
 
+    console.log('dwadada')
+
     useEffect(() => {
         const refreshInterval = setInterval(
             async () => {

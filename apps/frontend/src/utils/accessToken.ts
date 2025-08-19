@@ -12,7 +12,6 @@ export const refreshAccessToken = async () => {
         body: { accessToken: accessToken },
     })
     if (response.result) {
-        console.log(response.result)
         cookieStore.set('accessToken', response.result.accessToken)
     }
 }

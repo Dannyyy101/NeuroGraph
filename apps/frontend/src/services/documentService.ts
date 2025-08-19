@@ -36,7 +36,7 @@ export const updateDocumentById = async (documentId: number, updatedDocument: Do
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedDocument),
+        body: updatedDocument,
     })
 }
 
