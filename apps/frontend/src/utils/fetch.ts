@@ -3,6 +3,7 @@
 import { ApiError, ApiResponse, RequestOptions } from '@/utils/types/api.type'
 import { cookies } from 'next/headers'
 import { refreshAccessToken } from '@/utils/accessToken'
+import { signOut } from '@/lib/authjs/auth'
 
 let reauthenticated = false
 
@@ -20,7 +21,7 @@ export async function request<T>(url: string, { method, body, headers }: Request
             body: body ? JSON.stringify(body) : undefined,
         })
 
-        if (response.status === 401) {
+        if (response.status === 401 && !reauthenticated) {
             reauthenticated = true
             await refreshAccessToken()
             return request<T>(url, { method, body, headers })
@@ -28,6 +29,7 @@ export async function request<T>(url: string, { method, body, headers }: Request
 
         if (reauthenticated) {
             reauthenticated = false
+            await signOut()
         }
 
         if (!response.ok) {
