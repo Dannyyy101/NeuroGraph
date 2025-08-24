@@ -88,7 +88,17 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
         } else {
             const len = nodes.length
             const index = nodes.findIndex((item) => item.id === activeElementId)
-            setNodes((prev) => prev.toSpliced(index + 1, 0, { id: len, text: '' }))
+            const selection = window.getSelection()
+            let content = ''
+            const temp = [...nodes]
+            if (selection) {
+                const nodeText = temp[index].text
+                const caretPosition = selection.getRangeAt(0).endOffset
+                content = nodeText.slice(caretPosition, nodeText.length)
+                temp[index].text = nodeText.slice(0, caretPosition)
+            }
+
+            setNodes(temp.toSpliced(index + 1, 0, { id: len, text: content }))
             setActiveElementId(len)
             setTimeout(() => {
                 document.getElementById(String(len))?.focus()
