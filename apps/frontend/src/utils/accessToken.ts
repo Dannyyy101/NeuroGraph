@@ -9,6 +9,7 @@ export const refreshAccessToken = async () => {
 
     const response = await request<{ accessToken: string }>(BACKEND_URL + '/auth/refresh', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: { accessToken: accessToken },
     })
     if (response.result) {

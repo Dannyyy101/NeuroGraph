@@ -21,6 +21,10 @@ public class Flashcard {
     private String question;
     @Column(columnDefinition = "TEXT")
     private String answer;
+
+    @ManyToOne
+    @JoinColumn(name = "deck_id")
+    private Deck deck;
     @Column
     private Boolean active;
     @Column(name = "created_on")

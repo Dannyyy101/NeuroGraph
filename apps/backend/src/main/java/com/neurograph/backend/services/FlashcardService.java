@@ -6,7 +6,7 @@ import com.neurograph.backend.dtos.FlashcardDto;
 import java.util.Set;
 
 public interface FlashcardService {
-    void createFlashcard(FlashcardDto flashcardDTO);
+    FlashcardDto createFlashcard(FlashcardDto flashcardDTO);
 
     void createFlashcardWithAi(FlashcardPromptDto flashcardPromptDTO);
 

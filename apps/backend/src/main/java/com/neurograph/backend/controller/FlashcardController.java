@@ -1,5 +1,6 @@
 package com.neurograph.backend.controller;
 
+import com.neurograph.backend.dtos.DocumentDto;
 import com.neurograph.backend.dtos.FlashcardPromptDto;
 import com.neurograph.backend.dtos.FlashcardDto;
 import com.neurograph.backend.services.FlashcardService;
@@ -19,13 +20,16 @@ public class FlashcardController {
         this.flashcardService = flashcardService;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Long> createFlashcard(@RequestBody FlashcardDto flashcardDto) {
-        flashcardService.createFlashcard(flashcardDto);
+    @PostMapping("")
+    public ResponseEntity<FlashcardDto> createFlashcard(@RequestBody FlashcardDto flashcardDto, @RequestHeader("Prefer") String preferHeader) {
+        FlashcardDto flashcard = flashcardService.createFlashcard(flashcardDto);
+        if (preferHeader != null && preferHeader.equals("return-representation")) {
+            return new ResponseEntity<>(flashcard, HttpStatus.CREATED);
+        }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<Set<FlashcardDto>> getAllFlashcards() {
         return new ResponseEntity<>(flashcardService.getAllFlashcards(), HttpStatus.OK);
     }
@@ -63,12 +67,12 @@ public class FlashcardController {
     }
 
     @GetMapping("/prompts/{flashcardPromptId}")
-    public ResponseEntity<FlashcardPromptDto> getFlashCardPromptById(@PathVariable String  flashcardPromptId) {
+    public ResponseEntity<FlashcardPromptDto> getFlashCardPromptById(@PathVariable String flashcardPromptId) {
         return new ResponseEntity<>(flashcardService.getFlashCardPromptById(Long.valueOf(flashcardPromptId)), HttpStatus.OK);
     }
 
     @DeleteMapping("/prompts/{flashcardPromptId}")
-    public ResponseEntity<FlashcardPromptDto> deleteFlashCardPromptById(@PathVariable String  flashcardPromptId) {
+    public ResponseEntity<FlashcardPromptDto> deleteFlashCardPromptById(@PathVariable String flashcardPromptId) {
         flashcardService.deleteFlashcardPromptById(Long.valueOf(flashcardPromptId));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
