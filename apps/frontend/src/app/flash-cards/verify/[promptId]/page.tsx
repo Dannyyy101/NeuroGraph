@@ -9,6 +9,7 @@ import {
 } from '@/services/flashcardService'
 import { useParams, useRouter } from 'next/navigation'
 import { Flashcard } from '@/utils/types/flashcard.type'
+import { FlashcardView } from '@/components/flashcard/FlashcardView'
 
 export default function Prompt() {
     const [flashcardPrompt, setFlashcardPrompt] = useState<FlashcardPrompt | null>()
@@ -42,7 +43,7 @@ export default function Prompt() {
 
             <section className={'flex w-full mt-8 mx-10 justify-center'}>
                 {flashcardPrompt.flashcards.map((flashcard) => (
-                    <FlashcardView
+                    <ActivateFlashcardView
                         key={flashcard.flashcardId + 'flashcard'}
                         flashcard={flashcard}
                         activateFlashcard={() => handleActivateFlashcard(flashcard.flashcardId)}
@@ -53,27 +54,16 @@ export default function Prompt() {
     )
 }
 
-const FlashcardView = ({ flashcard, activateFlashcard }: { flashcard: Flashcard; activateFlashcard: () => void }) => {
-    const [flipped, setFlipped] = useState(false)
-
+const ActivateFlashcardView = ({
+    flashcard,
+    activateFlashcard,
+}: {
+    flashcard: Flashcard
+    activateFlashcard: () => void
+}) => {
     return (
-        <div className="flex flex-col items-center m-4 relative w-64 h-96 [perspective:1000px] hover:cursor-pointer">
-            <div
-                className={`inset-0 w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
-                    flipped ? '[transform:rotateY(180deg)]' : ''
-                }`}
-                onClick={() => setFlipped(!flipped)}
-            >
-                {/* Front */}
-                <div className="p-4 absolute inset-0 [backface-visibility:hidden] bg-white border border-border rounded-lg flex justify-center text-xl font-bold">
-                    {flashcard.question}
-                </div>
-
-                {/* Back */}
-                <div className="p-4 absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] bg-fg-border border border-border rounded-lg flex justify-center text-xl font-bold">
-                    {flashcard.answer}
-                </div>
-            </div>
+        <div className="flex flex-col items-center m-4 relative">
+            <FlashcardView flashcard={flashcard} />
             <button
                 onClick={activateFlashcard}
                 className={

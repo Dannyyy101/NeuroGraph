@@ -43,8 +43,8 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     @Override
-    public void createFlashcard(FlashcardDto flashcardDTO) {
-        flashcardRepository.save(flashcardMapper.toEntity(flashcardDTO));
+    public FlashcardDto createFlashcard(FlashcardDto flashcardDTO) {
+        return flashcardMapper.toDTO(flashcardRepository.save(flashcardMapper.toEntity(flashcardDTO)));
     }
 
     @Override
