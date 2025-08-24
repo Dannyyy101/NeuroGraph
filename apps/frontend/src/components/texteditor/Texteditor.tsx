@@ -65,16 +65,22 @@ export const Texteditor: React.FC<TexteditorProps> = ({ className, value, onChan
     }
 
     const handleRemoveLine = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const selection = window.getSelection()
+        if (!selection) throw new Error('There was no selection.')
+        const caretPosition = selection.getRangeAt(0).endOffset
         if (nodes.length > 1) {
             const index = nodes.findIndex((item) => item.id === activeElementId)
-            if (!nodes[index].text.match(/^<br>/) && nodes[index].text.length > 0) return
-
+            if (!nodes[index].text.match(/^<br>/) && caretPosition > 0) return
             e.preventDefault()
-
-            setNodes((prev) => prev.toSpliced(index, 1))
+            const temp = [...nodes]
             const newActiveElement = index === 0 ? nodes[1].id : nodes[index - 1].id
+            const nodeText = temp[index].text
+            const oldTextLength = temp[newActiveElement].text.length
+            temp[newActiveElement].text = temp[newActiveElement].text + nodeText.slice(caretPosition, nodeText.length)
+
+            setNodes(temp.toSpliced(index, 1))
             setActiveElementId(newActiveElement)
-            focusElement(newActiveElement)
+            focusElement(newActiveElement, oldTextLength)
         }
     }
 
